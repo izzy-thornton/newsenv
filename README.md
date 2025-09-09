@@ -44,30 +44,37 @@ poetry run python news_gui.py
 
 When you run a query in NewsEnv, results are exported to Excel (.xlsx) or CSV (.csv) files. Each row represents a single news article returned by the query.
 
-####Columns
+**Columns**
 
 -title
+
 --The headline of the article as published.
 
 -pubdate
+
 --The publication date of the article, when available (format: MM/DD/YYYY). This field may be blank if the source does not provide a publication date.
 
 -date_collected
+
 --The exact timestamp when the article was retrieved by NewsEnv (ISO 8601 format with timezone info). This allows reproducibility and shows when the dataset was generated.
 
 -url
+
 --The direct link to the full article.
 
 -summary
+
 --A short text summary or snippet of the article content (as returned by the search service).
 
 -keywords
+
 --Automatically extracted keywords from the article content, stored as a list of terms. These are useful for thematic analysis, quick filtering, or word cloud generation.
 
 -FullText
+
 --The full body text of the article as collected. Use this field for in-depth text analysis, coding, or natural language processing.
 
-####Example Row
+**Example Row**
 
 | Column        | Example Value                                                                 |
 |---------------|-------------------------------------------------------------------------------|
@@ -79,7 +86,7 @@ When you run a query in NewsEnv, results are exported to Excel (.xlsx) or CSV (.
 | **keywords**  | ['summer', 'expands', 'menu', 'refrescas', ...]                               |
 | **FullText**  | Full article text                  
 
-####Notes on Usage
+**Notes on Usage**
 
 -Some fields (like pubdate) may be missing or incomplete depending on the source.
 -To ensure reproducibility, always cite both the pubdate (if available) and the date_collected.
@@ -91,12 +98,19 @@ When you run a query in NewsEnv, results are exported to Excel (.xlsx) or CSV (.
 In addition to the CSV/Excel data exports, NewsEnv also generates a PDF summary report. This file provides a quick, human-readable overview of your search results.
 
 Each PDF report includes:
+
 -Title & Metadata
+
 -Report title (“News Coverage Report: Custom Search”)
+
 -Date the report was generated
+
 -The exact search query that produced the results
+
 -Links to the corresponding CSV and XLSX data files
+
 -Total number of articles retrieved
+
 -Keyword Analysis
 --A ranked list of the Top 10 Keywords extracted from the collected articles
 --Keywords are listed with their frequency counts (e.g., “taco: 676, bell: 573, chicken: 273”)
