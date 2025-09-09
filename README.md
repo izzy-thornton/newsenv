@@ -13,7 +13,7 @@ A simple Python application with a GUI made for social scientists and media rese
 
 ## Requirements
 - **Python 3.13** (recommended)  
-- **Poetry** (for depegindency management)  
+- **Poetry** (for dependency management)  
 
 If you don’t have Poetry installed yet, run:
 ```bash
