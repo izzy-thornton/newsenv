@@ -10,8 +10,8 @@ on:
 
 env:
   PYTHON_VERSION: "3.11"
-  APP_NAME: "NewsEnv"            # ← change to your app name
-  APP_ENTRY: "app.py"            # ← change to your entry script
+  APP_NAME: "Media Scrape"            # ← change to your app name
+  APP_ENTRY: "news_gui.py"            # ← change to your entry script
   PYSIMPLEGUI_INDEX: "https://PySimpleGUI.net/install"
 
 jobs:
