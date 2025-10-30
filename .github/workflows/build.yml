@@ -62,12 +62,31 @@ jobs:
 
       - name: Build with PyInstaller (macOS)
         if: matrix.os == 'macos-latest'
+        env:
+          TK_SILENCE_DEPRECATION: "1"
         run: |
-          poetry run pyinstaller --name "${APP_NAME}" --onefile --windowed "${APP_ENTRY}"
-          poetry run pyinstaller --name "${APP_NAME}" --windowed "${APP_ENTRY}"
-          cd dist
-          if [ -d "${APP_NAME}.app" ]; then zip -r "${APP_NAME}-macOS.app.zip" "${APP_NAME}.app"; fi
-          cd -
+          set -euxo pipefail
+          # Sanity: ensure entry exists
+          test -f "${APP_ENTRY}" || (echo "Missing entry: ${APP_ENTRY}" && exit 1)
+
+          # Clean previous build, build .app with extra tkinter collection
+          poetry run pyinstaller -y \
+            --windowed \
+            --name "${APP_NAME}" \
+            --log-level=DEBUG \
+            --hidden-import tkinter \
+            --hidden-import _tkinter \
+            --collect-submodules tkinter \
+            --collect-data tkinter \
+            "${APP_ENTRY}"
+
+          # Zip the .app using 'ditto' (handles resource forks properly)
+          if [ -d "dist/${APP_NAME}.app" ]; then
+            ditto -c -k --sequesterRsrc --keepParent "dist/${APP_NAME}.app" "dist/${APP_NAME}-macOS.app.zip"
+          else
+            echo "Expected app bundle not found at dist/${APP_NAME}.app"
+            exit 1
+          fi
 
       - name: Build with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
