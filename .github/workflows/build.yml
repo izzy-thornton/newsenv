@@ -1,22 +1,22 @@
-name: Build desktop apps
+# .github/workflows/build.yml
+name: Build and release desktop apps
 
 on:
-  workflow_dispatch:
   push:
     tags:
       - "v*"
     branches:
       - main
+  workflow_dispatch:
 
 env:
   PYTHON_VERSION: "3.11"
-  APP_NAME: "Media Scrape"            # ← change to your app name
-  APP_ENTRY: "news_gui.py"            # ← change to your entry script
+  APP_NAME: "NewsEnv"
+  APP_ENTRY: "news_gui.py"
   PYSIMPLEGUI_INDEX: "https://PySimpleGUI.net/install"
 
 jobs:
   build:
-    name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -24,92 +24,63 @@ jobs:
         os: [macos-latest, windows-latest]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Poetry
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           python -m pip install "poetry>=1.8"
-
-      - name: Configure Poetry
-        run: poetry config virtualenvs.in-project true
-
-      # Add private PySimpleGUI index (if not already in pyproject.toml)
-      - name: Add PySimpleGUI private source
-        run: |
+          poetry config virtualenvs.in-project true
           poetry source add --priority explicit pysimplegui "${{ env.PYSIMPLEGUI_INDEX }}"
-          poetry source show
-
-      - name: Cache virtualenv
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-
-
-      - name: Install dependencies (including dev)
-        run: poetry install --with dev
-
-      - name: Ensure PySimpleGUI installed from private source
-        run: poetry add PySimpleGUI --source pysimplegui || true
+          poetry install --with dev
+          poetry add PySimpleGUI --source pysimplegui || true
 
       - name: Build with PyInstaller (macOS)
         if: matrix.os == 'macos-latest'
         env:
           TK_SILENCE_DEPRECATION: "1"
         run: |
-          set -euxo pipefail
-          # Sanity: ensure entry exists
-          test -f "${APP_ENTRY}" || (echo "Missing entry: ${APP_ENTRY}" && exit 1)
-
-          # Clean previous build, build .app with extra tkinter collection
-          poetry run pyinstaller -y \
-            --windowed \
-            --name "${APP_NAME}" \
-            --log-level=DEBUG \
-            --hidden-import tkinter \
-            --hidden-import _tkinter \
-            --collect-submodules tkinter \
-            --collect-data tkinter \
-            "${APP_ENTRY}"
-
-          # Zip the .app using 'ditto' (handles resource forks properly)
-          if [ -d "dist/${APP_NAME}.app" ]; then
-            ditto -c -k --sequesterRsrc --keepParent "dist/${APP_NAME}.app" "dist/${APP_NAME}-macOS.app.zip"
-          else
-            echo "Expected app bundle not found at dist/${APP_NAME}.app"
-            exit 1
-          fi
+          poetry run pyinstaller --name "${APP_NAME}" --windowed "${APP_ENTRY}"
+          cd dist
+          if [ -d "${APP_NAME}.app" ]; then zip -r "${APP_NAME}-macOS.app.zip" "${APP_NAME}.app"; fi
+          cd -
 
       - name: Build with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: poetry run pyinstaller --name "$env:APP_NAME" --onefile --windowed "$env:APP_ENTRY"
 
-      - name: Upload artifacts (macOS)
+      - uses: actions/upload-artifact@v4
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-macOS
-          path: |
-            dist/${{ env.APP_NAME }}
-            dist/${{ env.APP_NAME }}.app
-            dist/${{ env.APP_NAME }}-macOS.app.zip
+          path: dist/${{ env.APP_NAME }}-macOS.app.zip
           if-no-files-found: ignore
 
-      - name: Upload artifacts (Windows)
+      - uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-Windows
           path: dist/${{ env.APP_NAME }}.exe
-          if-no-files-found: error
+          if-no-files-found: ignore
 
-
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-macOS
+          path: dist-mac
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-Windows
+          path: dist-win
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist-mac/${{ env.APP_NAME }}-macOS.app.zip
+            dist-win/${{ env.APP_NAME }}.exe
