@@ -6,7 +6,7 @@ version = "0.17.4"
 description = "Python graph (network) package"
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "altgraph-0.17.4-py2.py3-none-any.whl", hash = "sha256:642743b4750de17e655e6711601b077bc6598dbfa3ba5fa2b2a35ce12b508dff"},
     {file = "altgraph-0.17.4.tar.gz", hash = "sha256:1b5afbb98f6c4dcadb2e2ae6ab9fa994bbb8c1d75f4fa96d340f9437ae454406"},
@@ -283,6 +283,18 @@ docs = ["ipython", "matplotlib", "numpydoc", "sphinx"]
 tests = ["pytest", "pytest-cov", "pytest-xdist"]
 
 [[package]]
+name = "defusedxml"
+version = "0.7.1"
+description = "XML bomb protection for Python stdlib modules"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+groups = ["main"]
+files = [
+    {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
+    {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
+]
+
+[[package]]
 name = "dnspython"
 version = "2.7.0"
 description = "DNS toolkit"
@@ -439,6 +451,23 @@ groups = ["main"]
 files = [
     {file = "fpdf-1.7.2.tar.gz", hash = "sha256:125840783289e7d12552b1e86ab692c37322e7a65b96a99e0ea86cca041b6779"},
 ]
+
+[[package]]
+name = "fpdf2"
+version = "2.8.5"
+description = "Simple & fast PDF generation for Python"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "fpdf2-2.8.5-py3-none-any.whl", hash = "sha256:2356b94e2a5fcbd1fe53ac5cbb83494e9003308860ab180050255ba50961d913"},
+    {file = "fpdf2-2.8.5.tar.gz", hash = "sha256:af4491ef2e0a5fe476f9d61362925658949c995f7e804438c0e81008f1550247"},
+]
+
+[package.dependencies]
+defusedxml = "*"
+fonttools = ">=4.34.0"
+Pillow = ">=8.3.2,<9.2.dev0 || >=9.3.dev0"
 
 [[package]]
 name = "gnews"
@@ -717,7 +746,7 @@ version = "1.16.3"
 description = "Mach-O header analysis and editing"
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "macholib-1.16.3-py2.py3-none-any.whl", hash = "sha256:0e315d7583d38b8c77e815b1ecbdbf504a8258d8b3e17b61165c6feb60d18f2c"},
     {file = "macholib-1.16.3.tar.gz", hash = "sha256:07ae9e15e8e4cd9a788013d81f5908b3609aa76f9b1421bae9c4d7606ec86a30"},
@@ -904,7 +933,7 @@ version = "25.0"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"},
     {file = "packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"},
@@ -963,7 +992,10 @@ files = [
 ]
 
 [package.dependencies]
-numpy = {version = ">=1.26.0", markers = "python_version >= \"3.12\""}
+numpy = [
+    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
+]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
 tzdata = ">=2022.7"
@@ -992,6 +1024,19 @@ spss = ["pyreadstat (>=1.2.0)"]
 sql-other = ["SQLAlchemy (>=2.0.0)", "adbc-driver-postgresql (>=0.8.0)", "adbc-driver-sqlite (>=0.8.0)"]
 test = ["hypothesis (>=6.46.1)", "pytest (>=7.3.2)", "pytest-xdist (>=2.2.0)"]
 xml = ["lxml (>=4.9.2)"]
+
+[[package]]
+name = "pefile"
+version = "2023.2.7"
+description = "Python PE parsing module"
+optional = false
+python-versions = ">=3.6.0"
+groups = ["dev"]
+markers = "sys_platform == \"win32\""
+files = [
+    {file = "pefile-2023.2.7-py3-none-any.whl", hash = "sha256:da185cd2af68c08a6cd4481f7325ed600a88f6a813bad9dea07ab3ef73d8d8d6"},
+    {file = "pefile-2023.2.7.tar.gz", hash = "sha256:82e6114004b3d6911c77c3953e3838654b04511b8b66e8583db70c65998017dc"},
+]
 
 [[package]]
 name = "pillow"
@@ -1199,15 +1244,50 @@ files = [
 ]
 
 [[package]]
+name = "pyinstaller"
+version = "6.16.0"
+description = "PyInstaller bundles a Python application and all its dependencies into a single package."
+optional = false
+python-versions = "<3.15,>=3.8"
+groups = ["dev"]
+files = [
+    {file = "pyinstaller-6.16.0-py3-none-macosx_10_13_universal2.whl", hash = "sha256:7fd1c785219a87ca747c21fa92f561b0d2926a7edc06d0a0fe37f3736e00bd7a"},
+    {file = "pyinstaller-6.16.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:b756ddb9007b8141c5476b553351f9d97559b8af5d07f9460869bfae02be26b0"},
+    {file = "pyinstaller-6.16.0-py3-none-manylinux2014_i686.whl", hash = "sha256:0a48f55b85ff60f83169e10050f2759019cf1d06773ad1c4da3a411cd8751058"},
+    {file = "pyinstaller-6.16.0-py3-none-manylinux2014_ppc64le.whl", hash = "sha256:73ba72e04fcece92e32518bbb1e1fb5ac2892677943dfdff38e01a06e8742851"},
+    {file = "pyinstaller-6.16.0-py3-none-manylinux2014_s390x.whl", hash = "sha256:b1752488248f7899281b17ca3238eefb5410521291371a686a4f5830f29f52b3"},
+    {file = "pyinstaller-6.16.0-py3-none-manylinux2014_x86_64.whl", hash = "sha256:ba618a61627ee674d6d68e5de084ba17c707b59a4f2a856084b3999bdffbd3f0"},
+    {file = "pyinstaller-6.16.0-py3-none-musllinux_1_1_aarch64.whl", hash = "sha256:c8b7ef536711617e12fef4673806198872033fa06fa92326ad7fd1d84a9fa454"},
+    {file = "pyinstaller-6.16.0-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:d1ebf84d02c51fed19b82a8abb4df536923abd55bb684d694e1356e4ae2a0ce5"},
+    {file = "pyinstaller-6.16.0-py3-none-win32.whl", hash = "sha256:6d5f8617f3650ff9ef893e2ab4ddbf3c0d23d0c602ef74b5df8fbef4607840c8"},
+    {file = "pyinstaller-6.16.0-py3-none-win_amd64.whl", hash = "sha256:bc10eb1a787f99fea613509f55b902fbd2d8b73ff5f51ff245ea29a481d97d41"},
+    {file = "pyinstaller-6.16.0-py3-none-win_arm64.whl", hash = "sha256:d0af8a401de792c233c32c44b16d065ca9ab8262ee0c906835c12bdebc992a64"},
+    {file = "pyinstaller-6.16.0.tar.gz", hash = "sha256:53559fe1e041a234f2b4dcc3288ea8bdd57f7cad8a6644e422c27bb407f3edef"},
+]
+
+[package.dependencies]
+altgraph = "*"
+macholib = {version = ">=1.8", markers = "sys_platform == \"darwin\""}
+packaging = ">=22.0"
+pefile = {version = ">=2022.5.30,<2024.8.26 || >2024.8.26", markers = "sys_platform == \"win32\""}
+pyinstaller-hooks-contrib = ">=2025.8"
+pywin32-ctypes = {version = ">=0.2.1", markers = "sys_platform == \"win32\""}
+setuptools = ">=42.0.0"
+
+[package.extras]
+completion = ["argcomplete"]
+hook-testing = ["execnet (>=1.5.0)", "psutil", "pytest (>=2.7.3)"]
+
+[[package]]
 name = "pyinstaller-hooks-contrib"
-version = "2025.5"
+version = "2025.9"
 description = "Community maintained hooks for PyInstaller"
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["dev"]
 files = [
-    {file = "pyinstaller_hooks_contrib-2025.5-py3-none-any.whl", hash = "sha256:ebfae1ba341cb0002fb2770fad0edf2b3e913c2728d92df7ad562260988ca373"},
-    {file = "pyinstaller_hooks_contrib-2025.5.tar.gz", hash = "sha256:707386770b8fe066c04aad18a71bc483c7b25e18b4750a756999f7da2ab31982"},
+    {file = "pyinstaller_hooks_contrib-2025.9-py3-none-any.whl", hash = "sha256:ccbfaa49399ef6b18486a165810155e5a8d4c59b41f20dc5da81af7482aaf038"},
+    {file = "pyinstaller_hooks_contrib-2025.9.tar.gz", hash = "sha256:56e972bdaad4e9af767ed47d132362d162112260cbe488c9da7fee01f228a5a6"},
 ]
 
 [package.dependencies]
@@ -1273,6 +1353,19 @@ groups = ["main"]
 files = [
     {file = "pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00"},
     {file = "pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3"},
+]
+
+[[package]]
+name = "pywin32-ctypes"
+version = "0.2.3"
+description = "A (partial) reimplementation of pywin32 using ctypes/cffi"
+optional = false
+python-versions = ">=3.6"
+groups = ["dev"]
+markers = "sys_platform == \"win32\""
+files = [
+    {file = "pywin32-ctypes-0.2.3.tar.gz", hash = "sha256:d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755"},
+    {file = "pywin32_ctypes-0.2.3-py3-none-any.whl", hash = "sha256:8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8"},
 ]
 
 [[package]]
@@ -1500,7 +1593,7 @@ version = "80.9.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "dev"]
 files = [
     {file = "setuptools-80.9.0-py3-none-any.whl", hash = "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"},
     {file = "setuptools-80.9.0.tar.gz", hash = "sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"},
@@ -1736,5 +1829,5 @@ pillow = "*"
 
 [metadata]
 lock-version = "2.1"
-python-versions = "^3.13"
-content-hash = "9e8a7c30f999abf000f32a75ba1b0b11f146bccc46e7db1ac7ccc1ad864da2e7"
+python-versions = ">=3.11,<3.15"
+content-hash = "e1ba3e620fac15263469ab408578641ddf631b388f572cba0a600718fb43423c"
