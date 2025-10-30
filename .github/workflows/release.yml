@@ -1,0 +1,38 @@
+# Add to your existing workflow
+on:
+  push:
+    tags: ["v*"]   # create a tag like v1.0.0 to publish
+
+jobs:
+  build:
+    # ... your existing matrix build that produces files in dist/ ...
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Download artifacts produced by matrix jobs
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-macOS
+          path: dist-mac
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-Windows
+          path: dist-win
+
+      # Publish a GitHub Release with attached files
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist-mac/${{ env.APP_NAME }}-macOS.app.zip
+            dist-win/${{ env.APP_NAME }}.exe
+          draft: false
+          prerelease: false
