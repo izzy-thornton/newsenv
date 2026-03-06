@@ -169,7 +169,8 @@ def run_scraper(
                 "Fbv4je",
                 f'["garturlreq",[["X","X",["X","X"],null,null,1,1,"US:en",null,1,null,null,null,null,null,0,1],"X","X",1,[1,1,1],1,1,null,0,0,null,0],"{art["gn_art_id"]}",{art["timestamp"]},"{art["signature"]}"]',
             ]
-            for art in articles if art
+            for art in articles
+            if art and art.get("gn_art_id") and art.get("timestamp") and art.get("signature")
         ]
         if not articles_reqs:
             return []
@@ -182,7 +183,13 @@ def run_scraper(
             timeout=60,
         )
         response.raise_for_status()
-        return [json.loads(res[2])[1] for res in json.loads(response.text.split("\n\n")[1])[:-2]]
+
+        chunks = response.text.split("\n\n", 1)
+        if len(chunks) < 2:
+            return []
+
+        parsed = json.loads(chunks[1])
+        return [json.loads(res[2])[1] for res in parsed[:-2] if len(res) > 2]
 
     log("Decoding article URLs...\n")
     try:
@@ -194,6 +201,10 @@ def run_scraper(
         decoded_urls = decode_urls(articles_params)
     except Exception as e:
         log(f"❌ Failed to decode URLs: {e}\n")
+        return
+
+    if not decoded_urls:
+        log("⚠️ Could not decode article URLs from Google News redirect format.\n")
         return
 
     # Download articles
