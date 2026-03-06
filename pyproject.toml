@@ -67,7 +67,6 @@ wordcloud = "1.9.4"
 
 # --- Extra index for PySimpleGUI only ---
 fpdf2 = "^2.8.5"
-pysimplegui = {version = "^5.0.10", source = "pysimplegui"}
 
 
 [[tool.poetry.source]]

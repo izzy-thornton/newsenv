@@ -1310,25 +1310,6 @@ files = [
 diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
-name = "pysimplegui"
-version = "5.0.10"
-description = "Python GUIs for Humans. Launched in 2018. Grown to 5.0 in 2024."
-optional = false
-python-versions = ">=3.6"
-groups = ["main"]
-files = [
-    {file = "PySimpleGUI-5.0.10-py3-none-any.whl", hash = "sha256:aad6cbe01cc8b545d64ac23f1f294ff0a4f3f2d4216681eb306a1e268b4c80a4"},
-]
-
-[package.dependencies]
-rsa = "*"
-
-[package.source]
-type = "legacy"
-url = "https://PySimpleGUI.net/install"
-reference = "pysimplegui"
-
-[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -1830,4 +1811,4 @@ pillow = "*"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.15"
-content-hash = "27c084bfc7198bbea67d7f3e3328edc7e05d08c13f4768fca205d5b0667879f9"
+content-hash = "9de37976e8761d55c51a07e21b6aae3ce8e3fe389f46e3cfcae42ab24e56af43"
