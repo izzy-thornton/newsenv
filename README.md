@@ -31,8 +31,6 @@ Install dependencies into a virtual environment:
 ```bash
 poetry install
 ```
-
-> Note: PySimpleGUI is installed from its official package server. This is already configured in the project’s `pyproject.toml`.
 ---
 
 ## Usage
